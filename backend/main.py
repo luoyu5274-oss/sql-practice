@@ -57,8 +57,12 @@ async def health_check():
 STATIC_DIR = Path(__file__).parent / "static"
 STATIC_DIR.mkdir(exist_ok=True)
 
-if any(STATIC_DIR.iterdir()):  # 有文件才挂载
-    app.mount("/assets", StaticFiles(directory=STATIC_DIR / "assets"), name="assets")
+# 如果有前端构建产物就挂载
+INDEX_FILE = STATIC_DIR / "index.html"
+ASSETS_DIR = STATIC_DIR / "assets"
+
+if INDEX_FILE.exists():
+    app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
@@ -66,7 +70,12 @@ if any(STATIC_DIR.iterdir()):  # 有文件才挂载
         file_path = STATIC_DIR / full_path
         if file_path.exists() and file_path.is_file():
             return FileResponse(file_path)
-        return FileResponse(STATIC_DIR / "index.html")
+        return FileResponse(INDEX_FILE)
+
+    @app.get("/")
+    async def serve_root():
+        """根路径返回首页"""
+        return FileResponse(INDEX_FILE)
 
 
 # Render 启动
