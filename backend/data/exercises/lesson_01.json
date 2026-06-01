@@ -1,0 +1,327 @@
+{
+  "lesson_id": "lesson_01",
+  "lesson_title": "SELECT 查询入门",
+  "exercises": {
+    "basic": [
+      {
+        "id": "l01_b_01",
+        "index": 1,
+        "question_text": "查询 movies 表中所有电影的**标题（title）**。",
+        "question_context": "你需要从 movies 表中选择 title 这一列。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["title"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT title FROM movies;",
+        "accept_alternatives": [
+          "SELECT title FROM movies ORDER BY id;"
+        ],
+        "hints": [
+          "使用 SELECT 关键字指定你想查询的列名。语法为：SELECT 列名 FROM 表名;",
+          "列名是 title，表名是 movies。所以你需要写：SELECT title FROM movies;",
+          "直接执行这条语句即可：SELECT title FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "FROM"],
+        "estimated_time_seconds": 30
+      },
+      {
+        "id": "l01_b_02",
+        "index": 2,
+        "question_text": "查询 movies 表中所有电影的**导演（director）**。",
+        "question_context": "这次选择 director 列。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["director"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT director FROM movies;",
+        "accept_alternatives": [],
+        "hints": [
+          "将 title 换成 director 即可：SELECT director FROM movies;",
+          "语法：SELECT director FROM movies;",
+          "SELECT director FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "FROM"],
+        "estimated_time_seconds": 20
+      },
+      {
+        "id": "l01_b_03",
+        "index": 3,
+        "question_text": "查询 movies 表的**标题（title）和导演（director）**两列。",
+        "question_context": "你需要同时选择两列，用逗号分隔。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["title", "director"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT title, director FROM movies;",
+        "accept_alternatives": [
+          "SELECT title, director FROM movies ORDER BY id;"
+        ],
+        "hints": [
+          "多个列名用逗号分隔：SELECT 列1, 列2 FROM 表名;",
+          "需要查询的两列是 title 和 director：SELECT title, director FROM movies;",
+          "SELECT title, director FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "FROM", "多列选择"],
+        "estimated_time_seconds": 30
+      },
+      {
+        "id": "l01_b_04",
+        "index": 4,
+        "question_text": "查询 movies 表的**标题（title）和发行年份（year）**。",
+        "question_context": "这次练习选择 title 和 year 这两列。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["title", "year"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT title, year FROM movies;",
+        "accept_alternatives": [],
+        "hints": [
+          "列名是 title 和 year，用逗号分隔：SELECT title, year FROM movies;",
+          "SELECT title, year FROM movies;",
+          "SELECT title, year FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "FROM"],
+        "estimated_time_seconds": 20
+      },
+      {
+        "id": "l01_b_05",
+        "index": 5,
+        "question_text": "查询 movies 表的**全部信息**（所有列）。",
+        "question_context": "使用 * 通配符代表所有列。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["id", "title", "director", "year", "length_minutes"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT * FROM movies;",
+        "accept_alternatives": [
+          "SELECT id, title, director, year, length_minutes FROM movies;"
+        ],
+        "hints": [
+          "使用 * 代表所有列：SELECT * FROM movies;",
+          "* 通配符会展开为所有列：SELECT * FROM movies;",
+          "SELECT * FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT *", "FROM"],
+        "estimated_time_seconds": 20
+      }
+    ],
+    "intermediate": [
+      {
+        "id": "l01_i_01",
+        "index": 1,
+        "question_text": "查询 movies 表的**电影 ID 和标题**。",
+        "question_context": "你需要选择 id 和 title 这两列，注意列的先后顺序。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["id", "title"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT id, title FROM movies;",
+        "accept_alternatives": [],
+        "hints": [
+          "SELECT 后面跟 id 和 title，用逗号分隔：SELECT id, title FROM movies;",
+          "SELECT id, title FROM movies;",
+          "SELECT id, title FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "FROM"],
+        "estimated_time_seconds": 30
+      },
+      {
+        "id": "l01_i_02",
+        "index": 2,
+        "question_text": "查询每部电影的**标题、导演和片长**，使用英文列名。",
+        "question_context": "你需要同时选择 title, director, length_minutes 三列。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["title", "director", "length_minutes"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT title, director, length_minutes FROM movies;",
+        "accept_alternatives": [],
+        "hints": [
+          "三个列名：title, director, length_minutes",
+          "SELECT title, director, length_minutes FROM movies;",
+          "SELECT title, director, length_minutes FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "FROM", "多列"],
+        "estimated_time_seconds": 30
+      },
+      {
+        "id": "l01_i_03",
+        "index": 3,
+        "question_text": "查询每部电影的名称和上映年份，但在 SELECT 中将 year 列放在 title 列**前面**。",
+        "question_context": "列的顺序由 SELECT 中写的顺序决定。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["year", "title"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT year, title FROM movies;",
+        "accept_alternatives": [],
+        "hints": [
+          "SELECT 中先写 year，再写 title",
+          "SELECT year, title FROM movies;",
+          "SELECT year, title FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "列顺序"],
+        "estimated_time_seconds": 30
+      },
+      {
+        "id": "l01_i_04",
+        "index": 4,
+        "question_text": "查询所有电影的标题，但将结果中的**列名显示为中文 '电影名称'**。",
+        "question_context": "使用 AS 给列取别名。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["电影名称"],
+        "validation_type": "row_count",
+        "order_matters": false,
+        "reference_sql": "SELECT title AS '电影名称' FROM movies;",
+        "accept_alternatives": [
+          "SELECT title AS 电影名称 FROM movies;"
+        ],
+        "hints": [
+          "使用 AS 给列取别名：SELECT 列名 AS 别名 FROM 表名;",
+          "SELECT title AS '电影名称' FROM movies;",
+          "SELECT title AS '电影名称' FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "AS", "别名"],
+        "estimated_time_seconds": 45
+      },
+      {
+        "id": "l01_i_05",
+        "index": 5,
+        "question_text": "查询 movies 表中的**总行数**（有多少部电影）。",
+        "question_context": "使用 COUNT(*) 函数来统计行数。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": [],
+        "validation_type": "row_count",
+        "order_matters": false,
+        "reference_sql": "SELECT COUNT(*) FROM movies;",
+        "accept_alternatives": [
+          "SELECT COUNT(1) FROM movies;",
+          "SELECT COUNT(id) FROM movies;"
+        ],
+        "hints": [
+          "COUNT(*) 可以统计表中的总行数",
+          "SELECT COUNT(*) FROM movies;",
+          "SELECT COUNT(*) FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["COUNT", "聚合函数"],
+        "estimated_time_seconds": 45
+      }
+    ],
+    "challenge": [
+      {
+        "id": "l01_c_01",
+        "index": 1,
+        "question_text": "查询每部电影的标题和上映年份，并为 year 列设置别名 '发行年份'，为 title 列设置别名 '电影名'。",
+        "question_context": "两个列都需要设置中文别名。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": [],
+        "validation_type": "row_count",
+        "order_matters": false,
+        "reference_sql": "SELECT title AS '电影名', year AS '发行年份' FROM movies;",
+        "accept_alternatives": [],
+        "hints": [
+          "每列用 AS 设置别名，中间用逗号分隔",
+          "SELECT title AS '电影名', year AS '发行年份' FROM movies;",
+          "SELECT title AS '电影名', year AS '发行年份' FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "AS", "多列别名"],
+        "estimated_time_seconds": 60
+      },
+      {
+        "id": "l01_c_02",
+        "index": 2,
+        "question_text": "查询所有电影的导演，要求**不显示重复的导演姓名**。",
+        "question_context": "使用 DISTINCT 关键字去重。你还没学过这个知识点，请尝试搜索并运用。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["director"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT DISTINCT director FROM movies;",
+        "accept_alternatives": [
+          "SELECT DISTINCT director FROM movies ORDER BY director;"
+        ],
+        "hints": [
+          "在 SELECT 后面加上 DISTINCT 可以去除重复行",
+          "SELECT DISTINCT director FROM movies;",
+          "SELECT DISTINCT director FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["DISTINCT", "SELECT"],
+        "estimated_time_seconds": 90
+      },
+      {
+        "id": "l01_c_03",
+        "index": 3,
+        "question_text": "查询电影表，返回每部电影的 title 和 length_minutes，并将 length_minutes 列名显示为 '片长(分钟)'。",
+        "question_context": "使用 AS 设置中文列别名。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": [],
+        "validation_type": "row_count",
+        "order_matters": false,
+        "reference_sql": "SELECT title, length_minutes AS '片长(分钟)' FROM movies;",
+        "accept_alternatives": [],
+        "hints": [
+          "AS 用于给列设置别名：SELECT title, length_minutes AS '片长(分钟)' FROM movies;",
+          "SELECT title, length_minutes AS '片长(分钟)' FROM movies;",
+          "SELECT title, length_minutes AS '片长(分钟)' FROM movies;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "AS", "别名"],
+        "estimated_time_seconds": 60
+      },
+      {
+        "id": "l01_c_04",
+        "index": 4,
+        "question_text": "编写 SQL 查询所有电影，按**片长（length_minutes）升序**排列，返回 title 和 length_minutes。",
+        "question_context": "使用 ORDER BY 子句排序。这个知识点你可能还没学过，请尝试搜索学习。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["title", "length_minutes"],
+        "validation_type": "exact_match",
+        "order_matters": true,
+        "reference_sql": "SELECT title, length_minutes FROM movies ORDER BY length_minutes;",
+        "accept_alternatives": [
+          "SELECT title, length_minutes FROM movies ORDER BY length_minutes ASC;"
+        ],
+        "hints": [
+          "ORDER BY 列名 可以按指定列排序，默认是升序（ASC）",
+          "SELECT title, length_minutes FROM movies ORDER BY length_minutes;",
+          "SELECT title, length_minutes FROM movies ORDER BY length_minutes;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["SELECT", "ORDER BY", "排序"],
+        "estimated_time_seconds": 120
+      },
+      {
+        "id": "l01_c_05",
+        "index": 5,
+        "question_text": "写一条 SQL，返回 movies 表中上映年份**最新**的一部电影的标题和年份。",
+        "question_context": "你需要结合 ORDER BY DESC 和 LIMIT 1。这些知识点后续课程会详细讲解。",
+        "schema_hint": { "movies": ["id", "title", "director", "year", "length_minutes"] },
+        "expected_columns": ["title", "year"],
+        "validation_type": "exact_match",
+        "order_matters": false,
+        "reference_sql": "SELECT title, year FROM movies ORDER BY year DESC LIMIT 1;",
+        "accept_alternatives": [],
+        "hints": [
+          "按 year 降序排列（DESC），然后用 LIMIT 1 取第一条",
+          "SELECT title, year FROM movies ORDER BY year DESC LIMIT 1;",
+          "SELECT title, year FROM movies ORDER BY year DESC LIMIT 1;"
+        ],
+        "tables_used": ["movies"],
+        "knowledge_points": ["ORDER BY DESC", "LIMIT"],
+        "estimated_time_seconds": 120
+      }
+    ]
+  }
+}
