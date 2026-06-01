@@ -20,9 +20,10 @@ export default function TutorialPage() {
       return
     }
     setLoading(true)
+    setLesson(null)
     fetchLesson(lessonId)
       .then(data => setLesson(data))
-      .catch(() => navigate('/tutorial/lesson_01', { replace: true }))
+      .catch(() => setLesson(null))
       .finally(() => setLoading(false))
   }, [lessonId, navigate])
 
@@ -66,13 +67,22 @@ export default function TutorialPage() {
           </button>
 
           {loading ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60%', gap: 12 }}>
               <div style={{ color: 'var(--text-muted)', fontSize: '0.9375rem' }}>加载中...</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>首次访问需等待服务器唤醒（约 30 秒）</div>
             </div>
           ) : lesson ? (
             <LessonContent lesson={lesson} />
           ) : (
-            <div style={{ color: 'var(--text-muted)', padding: 40 }}>课程未找到</div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60%', gap: 16 }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', textAlign: 'center' }}>
+                加载失败，服务器可能在休眠中<br />
+                <span style={{ fontSize: '0.75rem' }}>请点击重试，等待 30-60 秒</span>
+              </div>
+              <button className="btn btn-primary btn-small" onClick={() => { setLoading(true); fetchLesson(lessonId).then(setLesson).catch(() => setLesson(null)).finally(() => setLoading(false)); }}>
+                重试
+              </button>
+            </div>
           )}
         </div>
         <div className="exercise-panel">
