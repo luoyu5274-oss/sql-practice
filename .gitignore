@@ -12,8 +12,7 @@ frontend/dist/
 # Database
 backend/data/practice.db
 
-# Frontend build output (copied to backend/static on Render)
-backend/static/
+# Frontend build output (committed for Render deployment)
 
 # IDE
 .vscode/
