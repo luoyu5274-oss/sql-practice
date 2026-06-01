@@ -12,6 +12,9 @@ frontend/dist/
 # Database
 backend/data/practice.db
 
+# Frontend build output (copied to backend/static on Render)
+backend/static/
+
 # IDE
 .vscode/
 .idea/

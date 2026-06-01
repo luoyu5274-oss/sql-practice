@@ -1,10 +1,13 @@
 """FastAPI 应用入口"""
 
 import os
+from pathlib import Path
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from config import CORS_ORIGINS
 from database import init_database
@@ -28,7 +31,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS 中间件
+# CORS — 生产环境同域访问，本地开发允许跨域
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
@@ -37,7 +40,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 注册路由
+# API 路由
 app.include_router(lessons.router, prefix="/api")
 app.include_router(exercise_routes.router, prefix="/api")
 app.include_router(validate.router, prefix="/api")
@@ -50,9 +53,23 @@ async def health_check():
     return {"status": "ok", "message": "SQL 练习平台运行中"}
 
 
-# Render 部署入口：直接用 uvicorn 启动时会找到 app 对象
-# 本地启动：uvicorn main:app --port 8000
-# Render 启动：uvicorn main:app --host 0.0.0.0 --port $PORT
+# 静态文件（前端构建产物）
+STATIC_DIR = Path(__file__).parent / "static"
+STATIC_DIR.mkdir(exist_ok=True)
+
+if any(STATIC_DIR.iterdir()):  # 有文件才挂载
+    app.mount("/assets", StaticFiles(directory=STATIC_DIR / "assets"), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        """SPA fallback：所有非 API 路径返回 index.html"""
+        file_path = STATIC_DIR / full_path
+        if file_path.exists() and file_path.is_file():
+            return FileResponse(file_path)
+        return FileResponse(STATIC_DIR / "index.html")
+
+
+# Render 启动
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
