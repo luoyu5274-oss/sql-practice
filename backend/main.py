@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse
 
 from config import CORS_ORIGINS
 from database import init_database
-from routers import lessons, exercises as exercise_routes, validate, database as db_routes
+from routers import lessons, exercises as exercise_routes, validate, database as db_routes, progress, auth
 
 
 @asynccontextmanager
@@ -45,6 +45,8 @@ app.include_router(lessons.router, prefix="/api")
 app.include_router(exercise_routes.router, prefix="/api")
 app.include_router(validate.router, prefix="/api")
 app.include_router(db_routes.router, prefix="/api")
+app.include_router(progress.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
 
 
 @app.get("/api/health")
@@ -67,6 +69,10 @@ if INDEX_FILE.exists():
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
         """SPA fallback：所有非 API 路径返回 index.html"""
+        # API 路径交给对应的路由处理，不做 SPA fallback
+        if full_path.startswith("api/"):
+            from fastapi.responses import JSONResponse
+            return JSONResponse({"detail": "Not Found"}, status_code=404)
         file_path = STATIC_DIR / full_path
         if file_path.exists() and file_path.is_file():
             return FileResponse(file_path)

@@ -1,0 +1,5 @@
+- [项目总览](project-overview.md) — SQL 练习平台定位、技术栈、功能列表
+- [重大技术决策](tech-decisions.md) — MySQL→SQLite、Netlify→Render、预构建前端等关键决策
+- [Bug 记录与修复](bugs-and-fixes.md) — 8 个 bug 的现象、原因、修复方案
+- [部署指南](deployment-guide.md) — Render 部署步骤、冷启动注意事项
+- [用户偏好](user-prefs.md) — UI 偏好、功能偏好、关键反馈

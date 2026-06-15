@@ -5,8 +5,6 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      <div className="logo-mark">{'</>'}</div>
-      <h1>SQL 练习平台</h1>
       <p className="subtitle">
         基于 SQLBolt 课程框架 · 180+ 道分级习题 · 即时验证
       </p>

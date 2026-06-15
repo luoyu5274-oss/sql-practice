@@ -8,6 +8,31 @@ const api = axios.create({
   timeout: 90000, // 90s — Render 免费版冷启动需要 30-60s
 })
 
+// ── Token 拦截器：自动在请求头带上 Bearer token ──
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('sql-practice-token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+// ── 401 拦截器：token 过期/无效时自动登出 ──
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401) {
+      localStorage.removeItem('sql-practice-token')
+      localStorage.removeItem('sql-practice-username')
+      // 不在请求中触发的 401（比如初始加载时 me 接口失败）
+      // 不强制跳转，由 AuthContext 处理
+    }
+    return Promise.reject(err)
+  }
+)
+
+// ===== 课程/习题 API =====
+
 export async function fetchLessons() {
   const { data } = await api.get('/lessons')
   return data
@@ -47,5 +72,43 @@ export async function fetchDatabaseStatus() {
 
 export async function fetchTablesInfo(tables) {
   const { data } = await api.post('/tables/info', { tables })
+  return data
+}
+
+// ===== 进度同步 =====
+
+export async function fetchProgress() {
+  const { data } = await api.get('/progress')
+  return data
+}
+
+export async function saveProgressToServer(lessonId, difficulty, exerciseId) {
+  const { data } = await api.post('/progress', {
+    lesson_id: lessonId,
+    difficulty,
+    exercise_id: exerciseId,
+  })
+  return data
+}
+
+export async function resetProgressOnServer() {
+  const { data } = await api.delete('/progress')
+  return data
+}
+
+// ===== 用户认证 =====
+
+export async function register(username, password) {
+  const { data } = await api.post('/auth/register', { username, password })
+  return data
+}
+
+export async function login(username, password) {
+  const { data } = await api.post('/auth/login', { username, password })
+  return data
+}
+
+export async function fetchMe() {
+  const { data } = await api.get('/auth/me')
   return data
 }
