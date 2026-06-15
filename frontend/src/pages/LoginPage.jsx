@@ -21,23 +21,23 @@ const tokens = {
 
 // ── Floating 3D shape definitions ──
 const shapes = [
-  { type: 'cube', size: 60, x: '10%', y: '15%', duration: 20, delay: 0, opacity: 0.06 },
-  { type: 'octa', size: 40, x: '85%', y: '20%', duration: 25, delay: 3, opacity: 0.05 },
-  { type: 'cube', size: 80, x: '75%', y: '70%', duration: 30, delay: 6, opacity: 0.04 },
-  { type: 'pyramid', size: 50, x: '20%', y: '75%', duration: 22, delay: 9, opacity: 0.05 },
-  { type: 'cube', size: 35, x: '50%', y: '10%', duration: 18, delay: 2, opacity: 0.07 },
-  { type: 'octa', size: 55, x: '90%', y: '55%', duration: 28, delay: 5, opacity: 0.04 },
-  { type: 'pyramid', size: 45, x: '5%', y: '50%', duration: 24, delay: 8, opacity: 0.05 },
+  { type: 'cube', size: 90, x: '8%', y: '12%', duration: 20, delay: 0, opacity: 0.35 },
+  { type: 'octa', size: 65, x: '82%', y: '18%', duration: 25, delay: 3, opacity: 0.30 },
+  { type: 'cube', size: 110, x: '72%', y: '68%', duration: 30, delay: 6, opacity: 0.25 },
+  { type: 'pyramid', size: 75, x: '18%', y: '72%', duration: 22, delay: 9, opacity: 0.32 },
+  { type: 'cube', size: 55, x: '48%', y: '8%', duration: 18, delay: 2, opacity: 0.38 },
+  { type: 'octa', size: 80, x: '88%', y: '52%', duration: 28, delay: 5, opacity: 0.28 },
+  { type: 'pyramid', size: 70, x: '4%', y: '48%', duration: 24, delay: 8, opacity: 0.33 },
 ]
 
 // ── Particle dots ──
-const particles = Array.from({ length: 30 }, (_, i) => ({
+const particles = Array.from({ length: 40 }, (_, i) => ({
   x: Math.random() * 100,
   y: Math.random() * 100,
-  size: 1 + Math.random() * 2,
-  duration: 8 + Math.random() * 12,
-  delay: Math.random() * 10,
-  opacity: 0.15 + Math.random() * 0.25,
+  size: 2 + Math.random() * 3,
+  duration: 6 + Math.random() * 10,
+  delay: Math.random() * 8,
+  opacity: 0.3 + Math.random() * 0.4,
 }))
 
 export default function LoginPage() {
@@ -198,16 +198,36 @@ export default function LoginPage() {
   )
 }
 
-// ── 3D Shape Component ──
+// ── 3D Shape Component (SVG-based, reliable) ──
 function Shape3D({ type, size, x, y, duration, delay, opacity }) {
-  const half = size / 2
-  const faceStyle = {
-    position: 'absolute',
-    width: size,
-    height: size,
-    border: '1px solid rgba(94,106,210,0.15)',
-    background: 'rgba(94,106,210,0.03)',
-    backfaceVisibility: 'hidden',
+  const strokeColor = `rgba(130,143,255,${opacity + 0.2})`
+  const fillOpacity = (opacity + 0.08) * 0.5
+  const strokeW = type === 'cube' ? 1.8 : 1.4
+
+  const svgContent = {
+    cube: (
+      <g transform={`scale(${size / 40})`}>
+        <rect x="4" y="4" width="32" height="32" rx="2" fill="none" stroke={strokeColor} strokeWidth={strokeW} />
+        <rect x="10" y="10" width="32" height="32" rx="2" fill="none" stroke={strokeColor} strokeWidth={strokeW} opacity="0.7" />
+        <line x1="4" y1="4" x2="10" y2="10" stroke={strokeColor} strokeWidth={strokeW} />
+        <line x1="36" y1="4" x2="42" y2="10" stroke={strokeColor} strokeWidth={strokeW} />
+        <line x1="4" y1="36" x2="10" y2="42" stroke={strokeColor} strokeWidth={strokeW} />
+      </g>
+    ),
+    octa: (
+      <g transform={`scale(${size / 40})`}>
+        <polygon points="20,2 38,20 20,38 2,20" fill="none" stroke={strokeColor} strokeWidth={strokeW} />
+        <polygon points="20,2 20,38 2,20" fill={`rgba(130,143,255,${fillOpacity})`} stroke="none" opacity="0.5" />
+        <line x1="20" y1="2" x2="20" y2="38" stroke={strokeColor} strokeWidth={strokeW * 0.5} opacity="0.4" />
+        <line x1="2" y1="20" x2="38" y2="20" stroke={strokeColor} strokeWidth={strokeW * 0.5} opacity="0.4" />
+      </g>
+    ),
+    pyramid: (
+      <g transform={`scale(${size / 40})`}>
+        <polygon points="20,4 36,34 4,34" fill="none" stroke={strokeColor} strokeWidth={strokeW} />
+        <polygon points="20,4 4,34 20,34" fill={`rgba(130,143,255,${fillOpacity})`} stroke="none" />
+      </g>
+    ),
   }
 
   return (
@@ -215,58 +235,15 @@ function Shape3D({ type, size, x, y, duration, delay, opacity }) {
       position: 'absolute',
       left: x, top: y,
       width: size, height: size,
-      transformStyle: 'preserve-3d',
       animation: `float3D ${duration}s ${delay}s infinite ease-in-out`,
       opacity,
       pointerEvents: 'none',
       zIndex: 0,
     }}>
-      {type === 'cube' && (
-        <>
-          <div style={{ ...faceStyle, transform: `translateZ(${half}px)` }} />
-          <div style={{ ...faceStyle, transform: `rotateY(180deg) translateZ(${half}px)` }} />
-          <div style={{ ...faceStyle, transform: `rotateY(90deg) translateZ(${half}px)` }} />
-          <div style={{ ...faceStyle, transform: `rotateY(-90deg) translateZ(${half}px)` }} />
-          <div style={{ ...faceStyle, transform: `rotateX(90deg) translateZ(${half}px)` }} />
-          <div style={{ ...faceStyle, transform: `rotateX(-90deg) translateZ(${half}px)` }} />
-        </>
-      )}
-      {type === 'octa' && (
-        <>
-          <div style={{ ...faceStyle, clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-            transform: `rotateY(0deg) translateZ(${half}px)` }} />
-          <div style={{ ...faceStyle, clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-            transform: `rotateY(90deg) translateZ(${half}px)` }} />
-          <div style={{ ...faceStyle, clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-            transform: `rotateY(180deg) translateZ(${half}px)` }} />
-          <div style={{ ...faceStyle, clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-            transform: `rotateY(270deg) translateZ(${half}px)` }} />
-        </>
-      )}
-      {type === 'pyramid' && (
-        <>
-          <div style={{
-            ...faceStyle,
-            clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
-            transform: `rotateY(60deg) rotateX(30deg) translateZ(${half * 0.7}px)`,
-          }} />
-          <div style={{
-            ...faceStyle,
-            clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
-            transform: `rotateY(180deg) rotateX(30deg) translateZ(${half * 0.7}px)`,
-          }} />
-          <div style={{
-            ...faceStyle,
-            clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
-            transform: `rotateY(300deg) rotateX(30deg) translateZ(${half * 0.7}px)`,
-          }} />
-          <div style={{
-            position: 'absolute', width: size, height: size,
-            background: 'rgba(94,106,210,0.04)',
-            transform: `rotateX(90deg) translateZ(${half * 0.3}px)`,
-          }} />
-        </>
-      )}
+      <svg width={size} height={size} viewBox="0 0 40 40"
+        style={{ overflow: 'visible' }}>
+        {svgContent[type]}
+      </svg>
     </div>
   )
 }
@@ -274,22 +251,22 @@ function Shape3D({ type, size, x, y, duration, delay, opacity }) {
 // ── CSS Animations ──
 const animations = `
 @keyframes float3D {
-  0%, 100% { transform: rotateX(0deg) rotateY(0deg) translateY(0px); }
-  25% { transform: rotateX(180deg) rotateY(90deg) translateY(-20px); }
-  50% { transform: rotateX(360deg) rotateY(180deg) translateY(0px); }
-  75% { transform: rotateX(180deg) rotateY(270deg) translateY(20px); }
+  0%, 100% { transform: rotate(0deg) translateY(0px); }
+  25% { transform: rotate(90deg) translateY(-25px); }
+  50% { transform: rotate(180deg) translateY(0px); }
+  75% { transform: rotate(270deg) translateY(25px); }
 }
 
 @keyframes driftUp {
   0% { transform: translateY(0) scale(1); opacity: 0; }
-  10% { opacity: 0.3; }
-  90% { opacity: 0.3; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
   100% { transform: translateY(-120px) scale(0.5); opacity: 0; }
 }
 
 @keyframes auroraPulse {
-  0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
-  50% { opacity: 0.5; transform: scale(1.1) rotate(3deg); }
+  0%, 100% { opacity: 0.4; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.6; transform: scale(1.1) rotate(3deg); }
 }
 `
 
@@ -311,28 +288,28 @@ const s = {
   },
   aurora: {
     position: 'absolute',
-    width: '600px',
-    height: '600px',
+    width: '700px',
+    height: '700px',
     borderRadius: '50%',
-    background: `radial-gradient(circle, rgba(94,106,210,0.12) 0%, transparent 70%)`,
+    background: `radial-gradient(circle, rgba(94,106,210,0.2) 0%, rgba(113,112,255,0.08) 40%, transparent 70%)`,
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     animation: 'auroraPulse 8s ease-in-out infinite',
     pointerEvents: 'none',
-    filter: 'blur(40px)',
+    filter: 'blur(60px)',
     zIndex: 0,
   },
   gridBg: {
     position: 'absolute',
     inset: 0,
     backgroundImage: `
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)
     `,
     backgroundSize: '48px 48px',
-    maskImage: 'radial-gradient(circle at 50% 50%, black 30%, transparent 70%)',
-    WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 30%, transparent 70%)',
+    maskImage: 'radial-gradient(circle at 50% 50%, black 40%, transparent 70%)',
+    WebkitMaskImage: 'radial-gradient(circle at 50% 50%, black 40%, transparent 70%)',
     pointerEvents: 'none',
     zIndex: 0,
   },
